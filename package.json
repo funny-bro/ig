@@ -1,0 +1,22 @@
+{
+  "name": "funny-bro-ig",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:funny-bro/ig.git",
+  "author": "waheng chang <wahengchang@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@pscraper/cmd": "^0.0.5",
+    "@pscraper/scraper": "0.0.7",
+    "@vitalets/google-translate-api": "^2.8.0",
+    "axios": "^0.18.0",
+    "download": "^7.1.0",
+    "jest": "^24.7.1",
+    "lodash.get": "^4.4.2",
+    "request": "^2.88.0",
+    "strapi-sdk-javascript": "^0.3.1"
+  },
+  "jest": {
+    "browser": false
+  }
+}
