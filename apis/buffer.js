@@ -1,4 +1,3 @@
-const axios = require('axios')
 const request = require('request')
 require('./apiLogger')
 
@@ -11,24 +10,33 @@ class BufferApi {
   }
 
   getProfileList() {
-    const {accessToken} = this
-    const url = `${baseUrl}/1/profiles.json?access_token=${accessToken}`
-    return axios(url)
+    return new Promise((resolve, reject) => {
+      const {accessToken} = this
+      const url = `${baseUrl}/1/profiles.json?access_token=${accessToken}`
+
+      request(url, function (error, response, body) {
+        if(error) return reject(error)
+        return resolve(JSON.parse(body))
+      });
+    })
   }
 
   getProfileById(id) {
-    if(!id) throw '[ERROR] BufferApi getProfileById, id is required'
+    return new Promise((resolve, reject) => {
+      if(!id) throw '[ERROR] BufferApi getProfileById, id is required'
 
-    const {accessToken} = this
-    const url = `${baseUrl}/1/profiles/${id}.json?access_token=${accessToken}`
-    return axios(url)
+      const {accessToken} = this
+      const url = `${baseUrl}/1/profiles/${id}.json?access_token=${accessToken}`
+
+      request(url, function (error, response, body) {
+        if(error) return reject(error)
+        return resolve(JSON.parse(body))
+      });
+    })
   }
 
   createPost(payload) {
     const {accessToken} = this
-
-    console.log('accessToken: ', accessToken)
-    console.log('payload: ', payload)
 
     return new Promise((resolve, reject)=>{
       const {text, profile_ids, media} = payload

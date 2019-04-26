@@ -21,8 +21,16 @@ class Base {
     return payload
   }
   async request(payload) {
-    const {contentType, strapi} = this
-    return strapi.createEntry(contentType, payload)
+    try {
+      const {contentType, strapi} = this
+      console.log('payload: ', payload)
+      console.log('contentType: ', contentType)
+      return strapi.createEntry(contentType, payload)
+    }
+    catch(err){
+      console.log('[ERROR] request')
+      throw err
+    }
   }
   async translate(payloadFieldList = []){
     const {payload} = this

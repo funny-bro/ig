@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "download": "^7.1.0",
     "jest": "^24.7.1",
+    "jimp": "^0.6.1",
     "lodash.get": "^4.4.2",
     "request": "^2.88.0",
     "strapi-sdk-javascript": "^0.3.1"

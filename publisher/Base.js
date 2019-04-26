@@ -11,16 +11,17 @@ class Base {
   }
   async initProfile(){
     const {accessToken, profileName} = this
+    console.log(`[INFO] profile is going to init: `, profileName, accessToken)
 
     const bufferInstance = new BufferApi(accessToken)
     const profileListRes = await bufferInstance.getProfileList()
-
-    const targetProfile = profileListRes.data.find( item => {
+    const targetProfile = profileListRes.find( item => {
       return item.service_username === profileName
     })
 
     this.bufferInstance = bufferInstance
     this.targetProfile = targetProfile
+    console.log(`[INFO] profile is inited success: ${targetProfile}`)
     return targetProfile
   }
   async beforeProcess(payload = {}) {
@@ -32,7 +33,6 @@ class Base {
   async process(payload = {}){
     const {_id} = await this.initProfile()
     const _payload = await this.beforeProcess(payload)    
-    console.log('_payload: ', _payload)
     return this.request({
       'profile_ids': _id,
       ..._payload

@@ -1,5 +1,5 @@
 const onlyCharDigit = (str = '') => {
-  return str.replace(/[^a-zA-Z]/g, "")
+  return str.replace(/[^a-zA-Z0-9]/g, "")
 }
 
 const urlFileName = (url = '') => {
@@ -40,10 +40,15 @@ const retrieveObject = (dataObj, iterableString = '') => {
   return retrieveObject(dataObj[currentString], nextIterableString)
 }
 
+const limitLength = (str = '', n=20) => {
+  return str.slice(-n)
+}
+
 module.exports ={
   onlyCharDigit,
   urlFileName,
   urlDomain,
   pad,
-  retrieveObject
+  retrieveObject,
+  limitLength
 }
