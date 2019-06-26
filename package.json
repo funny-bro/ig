@@ -15,7 +15,10 @@
     "jimp": "^0.6.1",
     "lodash.get": "^4.4.2",
     "request": "^2.88.0",
-    "strapi-sdk-javascript": "^0.3.1"
+    "sequelize": "^5.8.12",
+    "sqlite3": "^4.0.9",
+    "strapi-sdk-javascript": "^0.3.1",
+    "ytdl-core": "^0.29.1"
   },
   "jest": {
     "browser": false
