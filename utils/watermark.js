@@ -22,8 +22,11 @@ const watermark = (sourcePath, logoPath, config = {}) => {
     const height = baseImage.bitmap.height
     const margin = 50
 
-    const x = width - margin - DEFAULT_LOGO_WIDTH
-    const y = height - margin - DEFAULT_LOGO_HEIGHT
+    const waterWidth = width < 1000 ? DEFAULT_LOGO_WIDTH/5 : DEFAULT_LOGO_WIDTH
+    const waterHeight = width < 1000 ? DEFAULT_LOGO_WIDTH/5 : DEFAULT_LOGO_HEIGHT
+
+    const x = width - margin - waterWidth
+    const y = height - margin - waterHeight
 
     return baseImage
       .composite(logoImage, x,y, COMPOSITE_CONFIG)

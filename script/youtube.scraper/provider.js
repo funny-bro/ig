@@ -4,11 +4,12 @@
   const cmd = require('@pscraper/cmd')
   const ytdl = require('ytdl-core')
   const {onlyCharDigit} = require('../../utils/string')
-
   const fs = require('fs')
-  const projectName = 'youtubeApe20190626'
+
+  const { argv } = require('optimist')
+  const projectName = argv.projectName || `youtube2019`
   const taskDir = `@${projectName}`
-  const entryList = [ 'https://www.youtube.com/results?search_query=gorilla+monkey+ape+smart&sp=EgIYAQ%253D%253D' ]
+  const entry = argv.rootUrl
 
   const getPageId = (url) => {
     return onlyCharDigit(url.split('/').slice(-2).join(''))
@@ -31,37 +32,41 @@
   }
 
   // scrape from list 
-  for(let i = 0; i< entryList.length; i++) {
-    const entry = entryList[i]
-    console.log(`[INFO] starting entry: ${entry}`)
-    const id = getPageId(entry)
+  console.log(`[INFO] starting entry: ${entry}`)
+  if(!entry) {
+    console.error(`[ERROR] entry is required but ${entry}`)
+    process.exit(1)
+  }
 
-    try {
-      await cmd(`npx @pscraper/scraper --config=./script/youtube.scraper/pscraper.config.js --entry=${entry} --taskDir=./${taskDir} --id=${id}`)
+  const id = getPageId(entry)
 
-      const youtubeItemList = JSON.parse(fs.readFileSync(`./${taskDir}/task-${id}.json`, 'utf8'))
-      for(const item of youtubeItemList) {
-        const {url} = item
-        const sourceUrl = `http://www.youtube.com${url}`
-        const info = await infoYoutube(sourceUrl)
+  try {
+    await cmd(`npx @pscraper/scraper --config=./script/youtube.scraper/pscraper.config.js --entry=${entry} --taskDir=./${taskDir} --id=${id}`)
 
-        const type = 'YOUTUBE'
-        const {title ,description, ucid: sourceId} = info
-        const payload = {
-          title,
-          description, 
-          sourceUrl,
-          downloadUrl: sourceUrl,
-          type,
-          sourceId,
-        }
-        await skipOrCreate(sourceId, payload)
+    const youtubeItemList = JSON.parse(fs.readFileSync(`./${taskDir}/task-${id}.json`, 'utf8'))
+    for(const item of youtubeItemList) {
+      const {url} = item
+      const sourceUrl = `http://www.youtube.com${url}`
+      const info = await infoYoutube(sourceUrl)
+
+      const type = 'YOUTUBE'
+      const {title ,description, ucid: sourceId} = info
+      const payload = {
+        title,
+        description, 
+        sourceUrl,
+        downloadUrl: sourceUrl,
+        type,
+        sourceId,
       }
+      await skipOrCreate(sourceId, payload)
     }
-    catch(err){
-      // i -=1
-      console.error('[ERROR] for loop',err)
-      continue
-    }
+
+    console.log('[INFO] all video is added to task')
+    process.exit()
+  }
+  catch(err){
+    // i -=1
+    console.error('[ERROR] for loop',err)
   }
 })()

@@ -1,4 +1,4 @@
-const { Task } = require('../db')
+const { Task } = require('./db')
 const STATUS_CREATED = 'CREATED'
 const STATUS_FINISHED = 'FINISHED'
 const STATUS_FAIL = 'FAIL'
@@ -18,8 +18,8 @@ const skipOrCreate = (sourceId = {}, payload = {}) => new Promise((resolve, reje
     })
 })
 
-const getFirstTask = () => {
-  return Task.findOne({where: {status: STATUS_CREATED}})
+const getFirstTask = (condition = {}) => {
+  return Task.findOne({where: {status: STATUS_CREATED, ...condition}})
 }
 
 const finishedTask = (id) => {

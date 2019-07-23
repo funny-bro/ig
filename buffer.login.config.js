@@ -12,6 +12,7 @@ module.exports = {
   afterPageLoad: async function(page){
     await page.goto('https://buffer.com/signin');
     await sleep(2)
+    console.log(`[INFO] going to fill :${email}, ${password}`)
     await page.type('input[name=email]', email);
     await page.type('input[name=password]', password);
     await page.click('button[type=submit]');

@@ -8,23 +8,30 @@
   const translateApi = require('../../apis/translate')
   const {onlyCharDigit} = require('../../utils/string')
 
-  const projectName = 'youtubeApe20190626'
+  const { argv } = require('optimist')
+  const projectName = argv.projectName || `youtube2019`
   const taskDir = `@${projectName}`
 
   const sleep = (s) => new Promise((resolve)=> setTimeout(resolve, s*1000))
 
   const downloadYoutube = (url, filepath) => new Promise((resolve, reject)=> {
-    if(!url || !filepath) return reject('[ERROR] both params url, filepath are required: ', url, filepath)
-    const options = {
-      filter: (format) => format.container === 'mp4',
-      quality: 'highest'
+    try {
+      if(!url || !filepath) return reject('[ERROR] both params url, filepath are required: ', url, filepath)
+      const options = {
+        filter: (format) => format.container === 'mp4',
+        quality: 'highest'
+      }
+      const stream = ytdl(url, options)
+      .pipe(fs.createWriteStream(filepath))
+  
+      stream.on('finish', function () {
+        return resolve()
+      });
     }
-    const stream = ytdl(url, options)
-    .pipe(fs.createWriteStream(filepath))
-
-    stream.on('finish', function () {
-      return resolve()
-    });
+    catch(err){
+      console.log('[ERROR] downloadYoutube exception: ', err)
+      return reject(err)
+    }
   })
 
   const _translateApi = async (str) => {
@@ -95,10 +102,16 @@
     
       fs.writeFileSync(filepathMeta, JSON.stringify(__info, 0,4))
       console.log('[INFO] writing meta')
+      console.log('[INFO] going to download: ', sourceUrl)
     
-      await downloadYoutube(sourceUrl, filepathVideo)
-      await finishedTask(taskData.id)
-      console.log(`[INFO] Finished processing: ${title}`)
+      try {
+        await downloadYoutube(sourceUrl, filepathVideo)
+        await finishedTask(taskData.id)
+        console.log(`[INFO] Finished processing: ${title}`)
+      }
+      catch(err){
+        await markFailTask(taskData.id)
+      }
     }
   }
   catch(err){
