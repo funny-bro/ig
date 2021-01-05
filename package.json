@@ -9,7 +9,7 @@
     "@pscraper/cmd": "^0.0.5",
     "@pscraper/scraper": "0.0.7",
     "@vitalets/google-translate-api": "^2.8.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "download": "^7.1.0",
     "jest": "^24.7.1",
     "jimp": "^0.6.1",
